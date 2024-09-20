@@ -1,0 +1,9 @@
+SMS to +1234567890: This is a test SMS.
+SMS to +1234567890: This is a test SMS.
+SMS to +1234567890: This is a test SMS.
+SMS to +1234567890: Event: {
+  "type": "sms",
+  "message": "Test SMS notification",
+  "phone": "+1234567890"
+}
+
