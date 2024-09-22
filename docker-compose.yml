@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  notification-service:
+    build: .
+    ports:
+      - "5001:5001"
+    environment:
+      - DATABASE_URL=mysql+pymysql://user:password@mysql/notification_service
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - SECRET_KEY=YourSecretKeyHere
+      - MAIL_SERVER=mailserver
+      - MAIL_PORT=25
+      - MAIL_USERNAME=user@example.com
+      - MAIL_PASSWORD=password
+    depends_on:
+      - mysql
+      - rabbitmq
+
+  mysql:
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=notification_service
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  rabbitmq:
+    image: "rabbitmq:management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  mailserver:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  mysql_data:

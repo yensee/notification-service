@@ -4,14 +4,13 @@ from app.config import Config
 from app.db.session import engine
 from app.models import Base
 
-mail = Mail()
+app = Flask(__name__)
+
+
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-
-    # Initialize extensions
-    mail.init_app(app)
 
     # Create the database tables if they don't exist
     Base.metadata.create_all(bind=engine)

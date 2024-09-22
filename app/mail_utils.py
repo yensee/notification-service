@@ -1,6 +1,20 @@
-from flask_mail import Message
-from app import mail
+import json
+
+from flask import Flask
+from flask_mail import Message, Mail
 import os
+from app import Config
+
+app = Flask(__name__)
+
+# Configure Flask-Mail to use MailHog
+app.config['MAIL_SERVER'] = Config.MAIL_SERVER
+app.config['MAIL_PORT'] = Config.MAIL_PORT
+app.config['MAIL_USE_TLS'] = Config.MAIL_USE_TLS
+app.config['MAIL_USE_SSL'] = Config.MAIL_USE_SSL
+
+# Initialize Flask-Mail
+mail = Mail(app)
 
 def save_email_locally(message):
     save_path = './saved_emails'
@@ -15,11 +29,17 @@ def save_email_locally(message):
     print(f"Email saved to {email_file}")
 
 def send_email(subject, recipient, body):
-    msg = Message(subject, sender="no-reply@notifications.com", recipients=[recipient])
-    msg.body = body
-    # For actual sending use mail.send(msg) in production
-    # For saving locally in development or testing environment
-    save_email_locally(msg)
+    email_body = json.dumps(body, indent=4)
+
+    print(f"Email Body :  {email_body}")
+    with app.app_context():
+
+        msg = Message(subject, sender="no-reply@notifications.com", recipients=[recipient])
+        msg.body = f"Here is your notification data:\n\n{email_body}"
+        # For actual sending use mail.send(msg) in production
+        # For saving locally in development or testing environment
+        # save_email_locally(msg)
+        mail.send(msg)
 
 def send_sms(phone_number, message):
     # For offline mode, just print the SMS to console

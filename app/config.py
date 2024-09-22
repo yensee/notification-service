@@ -5,8 +5,8 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'mysecretkey'
 
     # Flask-Mail settings
-    MAIL_SERVER = 'localhost'
-    MAIL_PORT = 8025
+    MAIL_SERVER = '127.0.0.1'
+    MAIL_PORT = 1025
     MAIL_USERNAME = None
     MAIL_PASSWORD = None
     MAIL_USE_TLS = False
